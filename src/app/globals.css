@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    /* Fonts */
+    --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
+        Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
+        "Liberation Mono", Menlo, monospace;
+
+    /* Core brand palette - construction / industrial inspired */
+    --bg: #f5f3ee;
+    --bg-95: rgba(31, 31, 28, 0.95);
+    --surface: #ffffff; /* clean white cards */
+    --muted-surface: #ebe7df; /* subtle tan-gray section contrast */
+    --border: #d6d0c7; /* stronger, warmer border */
+
+    --dark: #1f1f1c; /* asphalt charcoal */
+    --dark-soft: #2b2b27; /* softened asphalt */
+
+    --text: #1f2933; /* strong dark text */
+    --text-muted: #5b6470; /* readable muted text */
+    --text-faint: #7a838f; /* lighter supporting text */
+
+    --accent: #f4b400; /* safety amber */
+    --accent-hover: #dea200;
+    --accent-text: #1a1a1a;
+
+    --success: #2f855a;
+    --danger: #c53030;
+
+    --radius-xl: 14px;
+    --radius-2xl: 18px;
+
+    --shadow-soft: 0 10px 24px rgba(31, 31, 28, 0.08);
+
+    /* App aliases */
+    --background: var(--bg);
+    --foreground: var(--text);
+
+    --header-bg: var(--dark);
+    --header-text: #ffffff;
+    --header-text-muted: rgba(255, 255, 255, 0.72);
+    --header-border: rgba(244, 180, 0, 0.18);
+
+    --footer-bg: var(--dark);
+    --footer-text: rgba(255, 255, 255, 0.72);
+    --footer-heading: #ffffff;
+    --footer-border: rgba(244, 180, 0, 0.18);
+
+    --card-bg: var(--surface);
+    --card-bg-muted: var(--muted-surface);
+    --card-border: var(--border);
+    --card-shadow: var(--shadow-soft);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+
+    --color-bg: var(--bg);
+    --color-surface: var(--surface);
+    --color-muted-surface: var(--muted-surface);
+    --color-border: var(--border);
+
+    --color-dark: var(--dark);
+    --color-dark-soft: var(--dark-soft);
+
+    --color-text: var(--text);
+    --color-text-muted: var(--text-muted);
+    --color-text-faint: var(--text-faint);
+
+    --color-accent: var(--accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-accent-text: var(--accent-text);
+
+    --color-success: var(--success);
+    --color-danger: var(--danger);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+    background: var(--background);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Base element polish */
+::selection {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+hr {
+    border-color: var(--border);
+}
+
+/* Reusable utility classes */
+.surface {
+    background-color: var(--surface);
+}
+
+.surface-muted {
+    background-color: var(--muted-surface);
+}
+
+.border-theme {
+    border-color: var(--border);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.text-faint {
+    color: var(--text-faint);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+    color: var(--accent-text);
+}
+
+.bg-accent:hover {
+    background-color: var(--accent-hover);
+}
+
+.bg-dark {
+    background-color: var(--dark);
+}
+
+.bg-dark-soft {
+    background-color: var(--dark-soft);
+}
+
+.card-theme {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    border-radius: var(--radius-2xl);
+}
+
+.card-theme-muted {
+    background-color: var(--card-bg-muted);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    border-radius: var(--radius-2xl);
+}
+
+/* Header/Footer helpers */
+.header-brand {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    border-bottom: 1px solid var(--header-border);
+}
+
+.footer-brand {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    border-top: 1px solid var(--footer-border);
+}
+
+/* Buttons / CTA helpers */
+.button-primary {
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border-radius: var(--radius-xl);
+    transition: all 0.2s ease-in-out;
+}
+
+.button-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.button-secondary {
+    background-color: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    transition: all 0.2s ease-in-out;
+}
+
+.button-secondary:hover {
+    background-color: var(--muted-surface);
+}
+
+/* Transition helpers */
+.transition-theme {
+    transition: all 0.2s ease-in-out;
+}
+
+.transform-gpu {
+    transform: translateZ(0);
 }
