@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-    BUSINESS_NAME,
-    PHONE_DISPLAY,
-    PHONE_E164,
-    AREA_SERVED,
-} from "@/lib/constants";
+import { useEffect, useMemo, useState, forwardRef } from "react";
+import { PHONE_DISPLAY, PHONE_E164, AREA_SERVED } from "@/lib/constants";
 
 type FormState = {
     name: string;
@@ -38,7 +33,7 @@ const DEFAULT: FormState = {
     details: "",
 };
 
-export function EstimateForm() {
+export const EstimateForm = forwardRef<HTMLDivElement>((props, ref) => {
     const [state, setState] = useState<FormState>(DEFAULT);
     const [status, setStatus] = useState<
         "idle" | "submitting" | "success" | "error"
@@ -87,7 +82,7 @@ export function EstimateForm() {
     }
 
     return (
-        <section id="estimate" className="scroll-mt-24">
+        <section id="home-estimate" ref={ref} className="scroll-mt-24">
             <div className="rounded-2xl border p-6 md:p-8">
                 <div className="flex flex-col gap-2">
                     <h2 className="text-2xl font-semibold">
@@ -211,11 +206,12 @@ export function EstimateForm() {
 
                     <p className="text-xs opacity-70 md:col-span-2">
                         By submitting, you agree we may contact you about your
-                        request. {BUSINESS_NAME} coordinates estimates with
-                        local partners.
+                        request.
                     </p>
                 </form>
             </div>
         </section>
     );
-}
+});
+
+EstimateForm.displayName = "EstimateForm";

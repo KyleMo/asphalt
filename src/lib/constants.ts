@@ -1,4 +1,4 @@
-export const BUSINESS_NAME = "LA Premier Asphalt";
+export const BUSINESS_NAME = "LA Precision Asphalt";
 export const PHONE_DISPLAY = "253-709-5434";
 export const PHONE_E164 = "+12537095434";
 

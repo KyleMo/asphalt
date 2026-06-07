@@ -61,6 +61,14 @@ export function Footer() {
                                 label: "Crack Filling",
                             },
                             {
+                                href: "/sealcoat-central-los-angeles",
+                                label: "Sealcoat",
+                            },
+                            {
+                                href: "/cleaning-central-los-angeles",
+                                label: "Asphalt Cleaning",
+                            },
+                            {
                                 href: "/asphalt-replacement-central-los-angeles",
                                 label: "Asphalt Replacement",
                             },

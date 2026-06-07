@@ -1,390 +1,468 @@
+"use client";
 import Image from "next/image";
-import PageLayout from "@/components/PageLayout";
+import Link from "next/link";
+import { StickyMobileCall } from "@/components/Layout/StickyMobileCall";
+import { EstimateForm } from "@/components/EstimateForm";
 
-const asphaltServices = [
-    "ADA Compliance",
-    "Asphalt Repair & Paving",
-    "Asphalt Sealcoating",
-    "Crack Repair & Sealing",
-    "Curb Painting",
-    "Pavement Markings",
-    "Pressure Washing",
-    "Signage",
-    "Thermoplastic Striping",
+import {
+    PHONE_DISPLAY,
+    PHONE_E164,
+    AREA_SERVED,
+    BUSINESS_NAME,
+} from "@/lib/constants";
+import { SchemaLocalBusiness } from "@/components/schemas/HomepageSchema";
+import { SchemaFAQ } from "@/components/schemas/SchemaFaq";
+import { useRef } from "react";
+
+const HOME_FAQS = [
+    {
+        q: "How fast can I get a quote?",
+        a: "Often same day when you include the property address and photos. Larger scopes may require a quick site walk for accuracy.",
+    },
+    {
+        q: "Can work be scheduled around operations?",
+        a: "Yes. Many partners can phase repairs by zone and schedule around dock hours or shift changes where available.",
+    },
+    {
+        q: "Do you handle truck yards and loading docks?",
+        a: "Yes. Industrial and warehouse properties are common requests in Central Los Angeles and Vernon.",
+    },
+    {
+        q: "Do you work on private property only?",
+        a: "Yes—commercial and private properties such as lots, yards, and facilities.",
+    },
+    {
+        q: "What should I send for the fastest estimate?",
+        a: "Property address, a few photos, rough dimensions or number of areas, and any access constraints like active docks or gate entry.",
+    },
 ];
 
-const concreteServices = [
-    "Driveways",
-    "Sealing",
-    "New ADA Ramps",
-    "Curbs",
-    "Sidewalks",
-    "Valley Gutters",
-    "Crack Repair",
+const services = [
+    {
+        title: "Commercial Pothole Repair",
+        desc: "Durable patching for high-traffic lots, truck lanes, and loading dock approaches.",
+        href: "/pothole-repair-central-los-angeles",
+    },
+    {
+        title: "Asphalt Crack Filling",
+        desc: "Seal cracks early to prevent water intrusion, base failure, and pothole formation.",
+        href: "/asphalt-crack-filling-central-los-angeles",
+    },
+    {
+        title: "Asphalt Replacement",
+        desc: "Remove & replace failed sections, overlays, and resurfacing for industrial properties.",
+        href: "/asphalt-replacement-central-los-angeles",
+    },
+    {
+        title: "Industrial & Warehouse Asphalt",
+        desc: "Operations-first scheduling for truck yards, turning zones, and heavy wear areas.",
+        href: "/industrial-warehouse-asphalt-repair",
+    },
 ];
 
-const serviceIcons = [
-    { label: "ASPHALT PRESERVATION" },
-    { label: "STRIPING & SIGNAGE" },
-    { label: "ADA COMPLIANCE" },
-    { label: "CRACK FILL & POTHOLE REPAIR" },
-    { label: "CONCRETE INSTALLATION" },
-];
-
-export default function Home() {
+function SectionTitle({
+    eyebrow,
+    title,
+    desc,
+}: {
+    eyebrow?: string;
+    title: string;
+    desc?: string;
+}) {
     return (
-        <PageLayout
-            hero={
-                <section className="relative w-full h-[420px] md:h-[520px] flex items-center justify-center overflow-hidden">
-                    {/* Full-width Hero Image */}
-                    <Image
-                        src="/website_banner.webp"
-                        alt="Aerial view of fresh asphalt paving (hero image)"
-                        fill
-                        style={{ objectFit: "cover" }}
-                        className="z-0"
-                        priority
-                    />
-                    {/* Overlay for readability */}
-                    <div className="absolute inset-0 bg-neutral-900/60 z-5" />
-                    {/* Call to Action Content */}
-                    <div className="relative z-10 flex flex-col items-center justify-center w-full pb-8">
-                        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-2 uppercase tracking-wide text-white drop-shadow-lg text-center">
-                                Full-Service Asphalt <br /> and Paving Services
+        <div className="space-y-3">
+            {eyebrow ? (
+                <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
+                    <span className="inline-block h-[2px] w-8 bg-[var(--accent)]" />
+                    {eyebrow}
+                </div>
+            ) : null}
+
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text)]">
+                {title}
+            </h2>
+
+            {desc ? (
+                <p className="max-w-3xl text-[var(--text-muted)] leading-relaxed">
+                    {desc}
+                </p>
+            ) : null}
+        </div>
+    );
+}
+
+export default function HomePage() {
+    const estimateRef = useRef<HTMLDivElement>(null);
+
+    const triggerScrollIntoView = () => {
+        if (estimateRef.current)
+            estimateRef.current.scrollIntoView({ behavior: "smooth" });
+    };
+    return (
+        <>
+            <SchemaLocalBusiness />
+            <SchemaFAQ faqs={HOME_FAQS} />
+
+            {/* HERO */}
+            <section className="border-b border-[var(--border)] bg-[var(--background)]">
+                <div className="mx-auto grid max-w-6xl gap-10 px-6 py-5 lg:grid-cols-2 md:items-center lg:py-10">
+                    <div className="relative">
+                        <Image
+                            src="/la-skyline.webp"
+                            alt="Industrial warehouse asphalt repair in Central Los Angeles"
+                            fill
+                            className="absolute inset-0 object-cover lg:hidden rounded-[var(--radius-2xl)] brightness-50"
+                            priority
+                        />
+                        <div className="relative z-10 space-y-6 p-6 lg:p-0">
+                            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted-surface)] lg:text-[var(--text-muted)]">
+                                <span className="inline-block h-[2px] w-8 bg-[var(--accent)]" />
+                                West + Central Los Angeles
+                            </div>
+
+                            <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight text-[var(--bg)] lg:text-[var(--text)] md:text-5xl">
+                                Asphalt repair for private and commercial
+                                properties
                             </h1>
-                            <p className="text-base font-medium mb-6 text-white/90 text-center">
-                                We are a local provider of professional asphalt,
-                                concrete, and construction services. Call us or
-                                request a quote to get started!
+
+                            <p className="max-w-xl text-base leading-relaxed text-[var(--muted-surface)] lg:text-[var(--text-muted)] md:text-lg">
+                                Pothole repair, crack filling, and asphalt
+                                replacement for high-traffic industrial lots.
+                                Request an estimate and we’ll connect you with a
+                                local asphalt partner for pricing and
+                                scheduling.
                             </p>
-                            <div className="flex justify-center">
+
+                            <div className="flex flex-col gap-3 sm:flex-row">
                                 <a
-                                    href="#contact"
-                                    className="inline-block bg-primary-500 text-white font-semibold rounded px-6 py-3 text-base shadow hover:bg-primary-600 transition-colors"
+                                    href={`tel:${PHONE_E164}`}
+                                    className="inline-flex items-center justify-center rounded-[var(--radius-xl)] border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-semibold text-[var(--text)] transition hover:bg-[var(--muted-surface)]"
                                 >
-                                    Request a Free Quote
+                                    Call {PHONE_DISPLAY}
                                 </a>
+
+                                <div
+                                    onClick={triggerScrollIntoView}
+                                    className="inline-flex items-center justify-center rounded-[var(--radius-xl)] bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-text)] transition hover:bg-[var(--accent-hover)]"
+                                >
+                                    Request Estimate
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="relative hidden lg:block">
+                        <div className="overflow-hidden rounded-[var(--radius-2xl)]">
+                            <Image
+                                src="/la-skyline.webp"
+                                alt="Industrial warehouse asphalt repair in Central Los Angeles"
+                                width={1200}
+                                height={900}
+                                className="h-[320px] w-full object-cover md:h-[460px] hidden lg:block"
+                                priority
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* MAIN */}
+            <main>
+                <section className="border-b border-[var(--border)] bg-[var(--muted-surface)]">
+                    <div className="mx-auto max-w-6xl px-6 py-5 lg:py-10">
+                        <SectionTitle
+                            eyebrow="Services Offered"
+                            title="Repair services for high-traffic properties"
+                            desc="We handle the most common failure points in commercial and industrial lots across West and Central Los Angeles — from potholes to full asphalt replacement."
+                        />
+
+                        {/* Service Grid */}
+                        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {[
+                                {
+                                    title: "Pothole Repair",
+                                    desc: "Fast patching for active damage in high-traffic areas.",
+                                },
+                                {
+                                    title: "Crack Filling",
+                                    desc: "Prevent water intrusion and structural failure.",
+                                },
+                                {
+                                    title: "Asphalt Replacement",
+                                    desc: "Remove and replace failed sections of pavement.",
+                                },
+                                {
+                                    title: "Concrete Installation",
+                                    desc: "Our team has several years of experience installing concrete driveways, stairs, and more.",
+                                },
+                                {
+                                    title: "Curbing",
+                                    desc: "Guide, stop, and redirect traffic with painted curbs.",
+                                },
+                                {
+                                    title: "Striping and Stenciling",
+                                    desc: "Revitalize your parking lot with fresh paint.",
+                                },
+                            ].map((service) => (
+                                <div
+                                    key={service.title}
+                                    className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--background)] p-5 transition hover:border-[var(--accent)]"
+                                >
+                                    <div className="text-base font-semibold text-[var(--text)]">
+                                        {service.title}
+                                    </div>
+                                    <p className="mt-2 text-sm text-[var(--text-muted)]">
+                                        {service.desc}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section className="border-b border-[var(--border)] bg-[var(--background)]">
+                    <div className="mx-auto max-w-6xl px-6 py-5 lg:py-10">
+                        <SectionTitle
+                            eyebrow={`Why ${BUSINESS_NAME}`}
+                            title="Reliable pavement care at a price that makes sense"
+                            desc={`${BUSINESS_NAME} brings years of hands-on experience delivering timely, meticulous asphalt and concrete repairs — at a cost that won't slow down your business. Focus on keeping operations running; we'll keep your infrastructure in top condition.`}
+                        />
+
+                        <div className="flex flex-col gap-10 mt-8 lg:flex-row lg:justify-center">
+                            <div className="lg:mt-5">
+                                <div className="border-l-4 border-[var(--accent)] pl-4">
+                                    <p className="text-md font-semibold text-[var(--text)]">
+                                        Serving Vernon and surrounding
+                                        industrial areas
+                                    </p>
+                                    <p className="mt-1 text-md text-[var(--text-muted)]">
+                                        Los Angeles, Commerce, Huntington Park,
+                                        Maywood, Bell, South Gate, Cudahy, Bell
+                                        Gardens, and East Los Angeles.
+                                    </p>
+                                </div>
+                                <ul className="mt-6 space-y-3 text-white/75 text-md">
+                                    {[
+                                        "Repairs scheduled around your operations — not the other way around",
+                                        "Durable results built to withstand high-traffic, high-stress environments",
+                                        "Over 7 years of combined expertise across asphalt and concrete",
+                                        "Transparent pricing with no surprise costs — just honest, quality work",
+                                    ].map((x) => (
+                                        <li key={x} className="flex gap-3">
+                                            <span className="mt-2 h-2 w-2 rounded-full bg-[#FBBF24]" />
+                                            <span style={{ color: "black" }}>
+                                                {x}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            {/* Image + overlay wrapper */}
+                            <div className="relative shrink-0 w-full h-[400px] lg:w-[500px] lg:h-[350px]">
+                                <Image
+                                    src="/concrete-driveway.webp"
+                                    alt="Industrial warehouse asphalt repair in Central Los Angeles"
+                                    width={1538}
+                                    height={1241}
+                                    className="object-cover w-full h-full rounded-[var(--radius-2xl)]"
+                                    priority
+                                />
+
+                                {/* Gradient overlay */}
+                                <div className="absolute inset-0 rounded-[var(--radius-2xl)] bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                                {/* Text content */}
+                                <div className="absolute bottom-0 left-0 p-5">
+                                    <p className="text-xs font-semibold tracking-widest uppercase text-[#FBBF24] mb-2">
+                                        On the job
+                                    </p>
+                                    <p className="text-white font-bold text-xl leading-snug mb-1">
+                                        Framing and finishing, done right the
+                                        first time
+                                    </p>
+                                    <p className="text-white/70 text-sm leading-snug">
+                                        The finish is where craftsmanship shows.
+                                        We slow down at the details so the final
+                                        surface is something you can take pride
+                                        in for years.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
-            }
-        >
-            {/* ASPHALT, CONCRETE SERVICES (2-column grid on tablet) */}
-            <section className="mt-8 md:grid md:grid-cols-2 md:gap-4 md:bg-gradient-to-r md:from-gray-100 md:to-white md:py-8">
-                {/* Asphalt Services */}
-                <div className="mb-8 md:mb-0 md:rounded md:shadow md:bg-white md:flex md:flex-col">
-                    <div className="bg-primary-500 text-white font-bold px-4 py-2 text-left text-2xl md:text-3xl md:rounded-t">
-                        Asphalt Services
-                    </div>
-                    <div className="md:flex md:flex-1">
-                        {/* Left side - Services list */}
-                        <div className="w-full md:w-1/2 flex-1">
-                            <div className="px-4 pt-4"></div>
-                            <ul className="bg-white px-4 py-4 text-left text-neutral-900 text-base space-y-2 md:bg-transparent md:p-0 md:pb-4 pl-4">
-                                {asphaltServices.map((item) => (
-                                    <li
-                                        key={item}
-                                        className="flex items-start gap-2"
-                                    >
-                                        <span className="text-primary-500 mt-1 ml-4">
-                                            ✔️
-                                        </span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        {/* Right side - Image (only on large screens) */}
-                        <div className="hidden lg:block lg:w-1/2 lg:p-4">
-                            <div className="relative w-full h-full min-h-[200px] rounded overflow-hidden">
-                                <img
-                                    src="/asphalt-paving-service.webp"
-                                    style={{
-                                        objectFit: "cover",
-                                        minHeight: "100%",
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="px-4 pb-4 mt-auto">
-                        <a
-                            href="#"
-                            className="block w-full text-center bg-neutral-900 text-white rounded py-2 font-semibold hover:bg-neutral-800 transition-colors"
-                        >
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                {/* Concrete Services */}
-                <div className="mb-8 md:mb-0 md:rounded md:shadow md:bg-white md:flex md:flex-col">
-                    <div className="bg-secondary-500 text-white font-bold px-4 py-2 text-left text-2xl md:text-3xl md:rounded-t">
-                        Concrete
-                    </div>
-                    <div className="md:flex md:flex-1">
-                        {/* Left side - Services list */}
-                        <div className="w-full md:w-1/2 flex-1">
-                            <div className="px-4 pt-4"></div>
-                            <ul className="bg-white px-4 py-4 text-left text-neutral-900 text-base space-y-2 md:bg-transparent md:p-0 md:pb-4 pl-4">
-                                {concreteServices.map((item) => (
-                                    <li
-                                        key={item}
-                                        className="flex items-start gap-2"
-                                    >
-                                        <span className="text-secondary-500 mt-1 ml-4">
-                                            ✔️
-                                        </span>
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        {/* Right side - Image (only on large screens) */}
-                        <div className="hidden lg:block lg:w-2/3 lg:p-4">
-                            <div className="flex justify-center align-center relative w-full h-full min-h-[200px] rounded overflow-hidden">
-                                <img
-                                    src="/concrete-driveway.webp"
-                                    style={{
-                                        objectFit: "cover",
-                                        minHeight: "100%",
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="px-4 pb-4 mt-auto">
-                        <a
-                            href="#"
-                            className="block w-full text-center bg-neutral-900 text-white rounded py-2 font-semibold hover:bg-neutral-800 transition-colors"
-                        >
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-            </section>
 
-            {/* ABOUT/WHY/WHAT SECTIONS (3-column grid on tablet) */}
-            <section className="mt-8 space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-4">
-                <div className="bg-white rounded shadow p-4 flex flex-col">
-                    <div className="relative bg-gray-300 flex items-center justify-center rounded overflow-hidden aspect-square mb-4 w-full max-w-xs h-40 mx-auto">
-                        <span className="absolute inset-0 flex items-center justify-center text-center text-gray-700 font-semibold px-2 text-base select-none">
-                            Photo of company team or owner
-                        </span>
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 uppercase text-primary-600">
-                        Who We Are?
-                    </h2>
-                    <p className="text-base mb-4 text-neutral-800">
-                        We are a locally owned and operated family business that
-                        cares about our clients and performs the highest quality
-                        work for a fair price. We help the local workforce and
-                        keep your money in the community.
-                    </p>
-                    <a
-                        href="/about#who-we-are"
-                        className="inline-block bg-primary-500 text-white rounded px-4 py-2 font-semibold hover:bg-primary-600 transition-colors mt-auto"
-                    >
-                        Read More
-                    </a>
-                </div>
-                <div className="bg-white rounded shadow p-4 flex flex-col">
-                    <div className="relative bg-gray-300 flex items-center justify-center rounded overflow-hidden aspect-square mb-4 w-full max-w-xs h-40 mx-auto">
-                        <span className="absolute inset-0 flex items-center justify-center text-center text-gray-700 font-semibold px-2 text-base select-none">
-                            Photo of handshake or customer interaction
-                        </span>
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 uppercase text-primary-600">
-                        Why Us?
-                    </h2>
-                    <p className="text-base mb-4 text-neutral-800">
-                        Our biggest differentiators are found in our company
-                        values: integrity, commitment to excellence, and quality
-                        work. See the other 7 values we live and work by below.
-                    </p>
-                    <a
-                        href="/about#why-us"
-                        className="inline-block bg-primary-500 text-white rounded px-4 py-2 font-semibold hover:bg-primary-600 transition-colors mt-auto"
-                    >
-                        Read More
-                    </a>
-                </div>
-                <div className="bg-white rounded shadow p-4 flex flex-col">
-                    <div className="relative bg-gray-300 flex items-center justify-center rounded overflow-hidden aspect-square mb-4 w-full max-w-xs h-40 mx-auto">
-                        <span className="absolute inset-0 flex items-center justify-center text-center text-gray-700 font-semibold px-2 text-base select-none">
-                            Photo of completed project or before/after
-                        </span>
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 uppercase text-primary-600">
-                        What We Do?
-                    </h2>
-                    <p className="text-base mb-4 text-neutral-800">
-                        We do all types of Asphalt Preservation, Concrete, and
-                        Earthwork. Call or email us to set up a call or job walk
-                        to see how we can serve you and your organization.
-                    </p>
-                    <a
-                        href="/about#what-we-do"
-                        className="inline-block bg-primary-500 text-white rounded px-4 py-2 font-semibold hover:bg-primary-600 transition-colors mt-auto"
-                    >
-                        Read More
-                    </a>
-                </div>
-            </section>
-
-            {/* SERVICE ICONS + IMAGE (side by side, vertical list, top-aligned, 50/50 split) */}
-            <section
-                className="mt-8 md:grid md:grid-cols-2 md:gap-4"
-                style={{ minHeight: 400 }}
-            >
-                {/* Left - Service list (vertical, centered horizontally, top-aligned, 50%) */}
-                <div
-                    className="flex flex-col items-center justify-start py-4 w-full"
-                    style={{
-                        backgroundImage: "url('asphalt-background.webp')",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                    }}
-                >
-                    <div className="flex flex-col items-center justify-center space-y-6 flex-1">
-                        {serviceIcons.map((service) => (
-                            <div
-                                key={service.label}
-                                className="flex items-center"
-                            >
-                                <span className="font-bold text-2xl tracking-wide text-primary-600 text-center">
-                                    {service.label}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {/* Right - Image (top-aligned, 50%) */}
-                <div className="flex items-start justify-center w-full p-0 h-full">
-                    <iframe
-                        title="Service Area Map"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3303.434234833635!2d-118.3964666847826!3d34.02112298061337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b97e6e6e6e6e%3A0x8e6b1b1b1b1b1b1b!2sCulver%20City%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1680000000000!5m2!1sen!2sus&z=9"
-                        width="100%"
-                        height="320"
-                        style={{ border: 0 }}
-                        className="h-full"
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                </div>
-            </section>
-
-            {/* MAP & CONTACT SECTION (2 columns on tablet) */}
-            <section
-                id="contact"
-                className="mt-8 md:grid md:grid-cols-2 md:gap-4"
-            >
-                <div className="bg-primary-500 text-white rounded p-4 mb-4 md:mb-0 md:ml-0 md:flex md:flex-col md:justify-center md:h-full">
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">
-                        Contact Us
-                    </h3>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="material-icons" aria-hidden>
-                            location_on
-                        </span>
-                        <span>Los Angeles, California, USA</span>
-                    </div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="material-icons" aria-hidden>
-                            call
-                        </span>
-                        <a href="tel:2537096030" className="underline">
-                            253-709-6030
-                        </a>
-                    </div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="material-icons" aria-hidden>
-                            email
-                        </span>
-                        <a href="mailto:kyle@starac.com" className="underline">
-                            kyle@starac.com
-                        </a>
-                    </div>
-                    <div className="flex gap-4 mt-2">
-                        <a
-                            href="#"
-                            aria-label="Facebook"
-                            className="hover:opacity-80"
-                        >
-                            <span className="material-icons">facebook</span>
-                        </a>
-                        <a
-                            href="#"
-                            aria-label="Twitter"
-                            className="hover:opacity-80"
-                        >
-                            <span className="material-icons">twitter</span>
-                        </a>
-                        <a
-                            href="#"
-                            aria-label="Instagram"
-                            className="hover:opacity-80"
-                        >
-                            <span className="material-icons">Instagram</span>
-                        </a>
-                    </div>
-                </div>
-                <form className="bg-white p-4 rounded shadow-md">
-                    <h3 className="text-xl font-bold mb-4">Send a Message</h3>
-                    <div className="mb-4">
-                        <label
-                            htmlFor="name"
-                            className="block font-medium mb-1"
-                        >
-                            Name
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            required
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                <section className="border-b border-[var(--border)] bg-[var(--background)]">
+                    <div className="mx-auto max-w-6xl px-6 py-5 lg:py-10">
+                        <SectionTitle
+                            eyebrow="Our Process"
+                            title="Simple, fast, operations-friendly"
+                            desc="We confirm details and dispatch a local asphalt partner who can quote and schedule the job."
                         />
+
+                        <div className="mt-8 grid gap-4 md:grid-cols-3">
+                            {[
+                                {
+                                    step: "1",
+                                    title: "Request an Estimate",
+                                    desc: "Fill out the short form or give us a call. We collect a few details about your property and so we can ensure a job well done. Sometimes for small jobs we can provide an estimate over the phone.",
+                                },
+                                {
+                                    step: "2",
+                                    title: "Written Quote",
+                                    desc: "If needed a professional will come out to access the property, confirms the scope, and provid a clear written quote — no vague ballparks or surprise line items.",
+                                },
+                                {
+                                    step: "3",
+                                    title: "We Do the Work",
+                                    desc: "Once you approve, the job is scheduled around your operations. We handle everything from start to finish and clean up before we leave.",
+                                },
+                            ].map((item) => (
+                                <div
+                                    key={item.step}
+                                    className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--surface)] p-6"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--radius-xl)] bg-[var(--accent)] font-extrabold text-[var(--accent-text)] shadow-sm">
+                                            {item.step}
+                                        </div>
+                                        <div className="text-base font-semibold text-[var(--text)]">
+                                            {item.title}
+                                        </div>
+                                    </div>
+                                    <p className="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+                                        {item.desc}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div className="mb-4">
-                        <label
-                            htmlFor="email"
-                            className="block font-medium mb-1"
-                        >
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            required
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                </section>
+                <div className="mx-auto max-w-6xl px-4 py-14 space-y-16">
+                    {/* BEFORE / AFTER */}
+                    {/*<section className="space-y-6">
+                        <SectionTitle
+                            eyebrow="Results"
+                            title="Before & after (industrial lots)"
+                            desc="Swap these with your own photos as you collect projects. This section increases trust fast."
                         />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                            htmlFor="message"
-                            className="block font-medium mb-1"
-                        >
-                            Message
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            required
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        ></textarea>
-                    </div>
-                    <button
-                        type="submit"
-                        className="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600 transition"
-                    >
-                        Submit
-                    </button>
-                </form>
-            </section>
-        </PageLayout>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {[
+                                {
+                                    before: "/images/before-1.jpg",
+                                    after: "/images/after-1.jpg",
+                                },
+                                {
+                                    before: "/images/before-2.jpg",
+                                    after: "/images/after-2.jpg",
+                                },
+                            ].map((pair, idx) => (
+                                <div
+                                    key={idx}
+                                    className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden"
+                                >
+                                    <div className="grid grid-cols-2">
+                                        <div className="relative">
+                                            <Image
+                                                src={pair.before}
+                                                alt="Before asphalt repair"
+                                                width={900}
+                                                height={700}
+                                                className="h-56 w-full object-cover"
+                                            />
+                                            <div className="absolute top-3 left-3 rounded-full bg-black/50 border border-white/10 px-3 py-1 text-xs text-white/80">
+                                                Before
+                                            </div>
+                                        </div>
+                                        <div className="relative">
+                                            <Image
+                                                src={pair.after}
+                                                alt="After asphalt repair"
+                                                width={900}
+                                                height={700}
+                                                className="h-56 w-full object-cover"
+                                            />
+                                            <div className="absolute top-3 left-3 rounded-full bg-black/50 border border-white/10 px-3 py-1 text-xs text-white/80">
+                                                After
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="p-5 text-sm text-white/70">
+                                        Common scopes: patching high-stress
+                                        zones, sealing cracks, correcting failed
+                                        sections near docks and turning radii.
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>*/}
+
+                    {/* SERVICE AREA */}
+                    <section className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                        <div className="grid gap-8 md:grid-cols-2 items-start">
+                            <div className="space-y-3">
+                                <div className="inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-black/75">
+                                    Service Area
+                                </div>
+                                <div className="text-2xl font-semibold tracking-tight text-black">
+                                    Vernon + nearby cities
+                                </div>
+                                <p className="text-black/70 text-sm leading-relaxed">
+                                    We focus on commercial/private properties in
+                                    and around Vernon and Central Los Angeles:
+                                </p>
+                                <p className="text-black/75 text-sm">
+                                    {AREA_SERVED.join(", ")}
+                                </p>
+
+                                <div className="pt-3 flex gap-3">
+                                    <a
+                                        href={`tel:${PHONE_E164}`}
+                                        className="inline-flex items-center justify-center rounded-xl border border-white/15 px-4 py-3 text-sm font-semibold text-black hover:border-white/25 hover:bg-white/5 transition"
+                                    >
+                                        Call {PHONE_DISPLAY}
+                                    </a>
+                                    <Link
+                                        href="/#estimate"
+                                        className="inline-flex items-center justify-center rounded-xl bg-[#FBBF24] px-4 py-3 text-sm font-semibold text-[#1A1A1A] hover:bg-[#F59E0B] transition shadow"
+                                    >
+                                        Request Estimate
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* FAQ + ESTIMATE FORM */}
+                    <section className="space-y-6">
+                        <SectionTitle
+                            eyebrow="FAQ"
+                            title="Quick answers"
+                            desc="If you don’t see your situation here, request an estimate and we’ll confirm scope and coverage."
+                        />
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {HOME_FAQS.map((f) => (
+                                <div
+                                    key={f.q}
+                                    className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                                >
+                                    <div className="text-white font-semibold">
+                                        {f.q}
+                                    </div>
+                                    <p className="mt-2 text-sm text-white/70 leading-relaxed">
+                                        {f.a}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <EstimateForm ref={estimateRef} />
+                    </section>
+                </div>
+            </main>
+            <StickyMobileCall />
+        </>
     );
 }

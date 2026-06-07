@@ -2,10 +2,12 @@
 
 :root {
     /* Fonts */
-    --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
-        Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
-        "Liberation Mono", Menlo, monospace;
+    --font-sans:
+        var(--font-poppins), ui-sans-serif, system-ui, -apple-system, Segoe UI,
+        Roboto, Helvetica, Arial, sans-serif;
+    --font-mono:
+        ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono",
+        Menlo, monospace;
 
     /* Core brand palette - construction / industrial inspired */
     --bg: #f5f3ee;
