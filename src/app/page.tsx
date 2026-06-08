@@ -12,7 +12,9 @@ import {
 } from "@/lib/constants";
 import { SchemaLocalBusiness } from "@/components/schemas/HomepageSchema";
 import { SchemaFAQ } from "@/components/schemas/SchemaFaq";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { Pill } from "@/components/Containers/Pill";
+import { Grid } from "@/components/Containers/Grid";
 
 const HOME_FAQS = [
     {
@@ -37,28 +39,23 @@ const HOME_FAQS = [
     },
 ];
 
-const services = [
+const serviceAreas: { id: string, name: string, iframeUrl: string }[] = [
     {
-        title: "Commercial Pothole Repair",
-        desc: "Durable patching for high-traffic lots, truck lanes, and loading dock approaches.",
-        href: "/pothole-repair-central-los-angeles",
+        id: "vernon",
+        name: "Vernon",
+        iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.32403183519875!3d33.99676534214896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c8d3cfe0eeaf%3A0x2165b53b36077693!2sVernon%2C%20CA!5e0!3m2!1sen!2sus!4v1780867952888!5m2!1sen!2sus"
     },
     {
-        title: "Asphalt Crack Filling",
-        desc: "Seal cracks early to prevent water intrusion, base failure, and pothole formation.",
-        href: "/asphalt-crack-filling-central-los-angeles",
+        id: "santamonica",
+        name: "Santa Monica",
+        iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.52391349868401!3d34.00872023308046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2a4cec2910019%3A0xb4170ab5ff23f5ab!2sSanta%20Monica%2C%20CA!5e0!3m2!1sen!2sus!4v1780868738869!5m2!1sen!2sus"
     },
-    {
-        title: "Asphalt Replacement",
-        desc: "Remove & replace failed sections, overlays, and resurfacing for industrial properties.",
-        href: "/asphalt-replacement-central-los-angeles",
-    },
-    {
-        title: "Industrial & Warehouse Asphalt",
-        desc: "Operations-first scheduling for truck yards, turning zones, and heavy wear areas.",
-        href: "/industrial-warehouse-asphalt-repair",
-    },
-];
+    { id: "culvercity", name: "Culver City", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.42962409868841!3d34.0059917331465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2ba1edb77739d%3A0x3185e9d14beb59fe!2sCulver%20City%2C%20CA!5e0!3m2!1sen!2sus!4v1780869143669!5m2!1sen!2sus" },
+    { id: "midcity", name: "Mid City", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.36912041596322!3d34.04111732057725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b8f9c97be62b%3A0xde136f8ec360d2a!2sMid-City%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869176119!5m2!1sen!2sus" },
+    { id: "hollywood", name: "Hollywood", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.34566791594204!3d34.09444387025635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2bf07045279bf%3A0xf67a9a6797bdfae4!2sHollywood%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869221670!5m2!1sen!2sus" },
+    { id: "torrance", name: "Torrance", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.44167717834812!3d33.879933892327564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dd4ad158b3ded3%3A0xad4bd36e4e0a661e!2sTorrance%2C%20CA!5e0!3m2!1sen!2sus!4v1780869289983!5m2!1sen!2sus" },
+    { id: "westlake", name: "Westlake", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.44167717834812!3d33.879933892327564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c7a692287f8b%3A0x21ffbf91ef53e292!2sWestlake%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869322159!5m2!1sen!2sus" }
+]
 
 function SectionTitle({
     eyebrow,
@@ -93,6 +90,10 @@ function SectionTitle({
 
 export default function HomePage() {
     const estimateRef = useRef<HTMLDivElement>(null);
+    const [selectedAreaId, setSelectedAreaId] = useState<string>(serviceAreas[0].id)
+    const selectedArea = serviceAreas.find(a => a.id === selectedAreaId)!
+
+    const handleAreaClick = (areaId: string) => setSelectedAreaId(areaId)
 
     const triggerScrollIntoView = () => {
         if (estimateRef.current)
@@ -121,7 +122,7 @@ export default function HomePage() {
                             </div>
 
                             <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight text-[var(--bg)] lg:text-[var(--text)] md:text-5xl">
-                                Asphalt repair for private and commercial
+                                Roadway repair for private and commercial
                                 properties
                             </h1>
 
@@ -338,9 +339,8 @@ export default function HomePage() {
                         </div>
                     </div>
                 </section>
-                <div className="mx-auto max-w-6xl px-4 py-14 space-y-16">
-                    {/* BEFORE / AFTER */}
-                    {/*<section className="space-y-6">
+                {/* BEFORE / AFTER */}
+                {/*<section className="space-y-6">
                         <SectionTitle
                             eyebrow="Results"
                             title="Before & after (industrial lots)"
@@ -398,70 +398,88 @@ export default function HomePage() {
                         </div>
                     </section>*/}
 
-                    {/* SERVICE AREA */}
-                    <section className="rounded-3xl border border-white/10 bg-white/5 p-8">
-                        <div className="grid gap-8 md:grid-cols-2 items-start">
-                            <div className="space-y-3">
-                                <div className="inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-black/75">
-                                    Service Area
-                                </div>
-                                <div className="text-2xl font-semibold tracking-tight text-black">
-                                    Vernon + nearby cities
-                                </div>
-                                <p className="text-black/70 text-sm leading-relaxed">
-                                    We focus on commercial/private properties in
-                                    and around Vernon and Central Los Angeles:
-                                </p>
-                                <p className="text-black/75 text-sm">
-                                    {AREA_SERVED.join(", ")}
-                                </p>
+                {/* SERVICE AREA */}
+                <section className="border-b border-[var(--border)] bg-[var(--muted-surface)]">
 
-                                <div className="pt-3 flex gap-3">
-                                    <a
-                                        href={`tel:${PHONE_E164}`}
-                                        className="inline-flex items-center justify-center rounded-xl border border-white/15 px-4 py-3 text-sm font-semibold text-black hover:border-white/25 hover:bg-white/5 transition"
-                                    >
-                                        Call {PHONE_DISPLAY}
-                                    </a>
-                                    <Link
-                                        href="/#estimate"
-                                        className="inline-flex items-center justify-center rounded-xl bg-[#FBBF24] px-4 py-3 text-sm font-semibold text-[#1A1A1A] hover:bg-[#F59E0B] transition shadow"
-                                    >
-                                        Request Estimate
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* FAQ + ESTIMATE FORM */}
-                    <section className="space-y-6">
+                    <div className="mx-auto max-w-6xl px-6 py-5 lg:py-10">
                         <SectionTitle
-                            eyebrow="FAQ"
-                            title="Quick answers"
-                            desc="If you don’t see your situation here, request an estimate and we’ll confirm scope and coverage."
+                            eyebrow="Service Area"
+                            title="West to Central Los Angeles"
+                            desc="We focus on commercial/private properties in and around West to Central Los Angeles:"
                         />
 
-                        <div className="grid gap-4 md:grid-cols-2">
-                            {HOME_FAQS.map((f) => (
-                                <div
-                                    key={f.q}
-                                    className="rounded-3xl border border-white/10 bg-white/5 p-6"
-                                >
-                                    <div className="text-white font-semibold">
-                                        {f.q}
-                                    </div>
-                                    <p className="mt-2 text-sm text-white/70 leading-relaxed">
-                                        {f.a}
+                        <div
+                            className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--surface)] p-10"
+                        >
+                            <Grid columns={2}>
+                                <div className="flex flex-col gap-5">
+                                    <h3 className="text-xl font-bold tracking-tight text-[var(--text)]">
+                                        Where We Work
+                                    </h3>
+                                    <p className="text-sm leading-relaxed text-[var(--text-muted)] p-0">
+                                        Industrial corridors, truck yards, dock approaches, and private lots — coordinated around your shift schedule.
                                     </p>
-                                </div>
-                            ))}
-                        </div>
+                                    <div className="flex flex-wrap gap-1">
+                                        {serviceAreas.map(area => {
+                                            return <Pill key={area.id} text={area.name} active={area.id === selectedAreaId} onClick={() => handleAreaClick(area.id)} />
+                                        })}
+                                    </div>
+                                    <div className="flex shrink-0 items-center gap-2">
+                                        <a
+                                            href={`tel:${PHONE_E164}`}
+                                            className="hidden items-center justify-center rounded-[var(--radius-xl)] border border-white/15 px-3 py-2 text-xs font-semibold uppercase tracking-[0.06em] text-[var(--header-text)] transition hover:border-white/25 hover:bg-white/5 lg:inline-flex"
+                                        >
+                                            Call {PHONE_DISPLAY}
+                                        </a>
 
-                        <EstimateForm ref={estimateRef} />
-                    </section>
-                </div>
-            </main>
+                                        <Link
+                                            href="/#estimate"
+                                            className="hidden items-center justify-center rounded-[var(--radius-xl)] bg-[var(--accent)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.06em] text-[var(--accent-text)] transition hover:bg-[var(--accent-hover)] sm:inline-flex"
+                                        >
+                                            Request Estimate
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="h-full min-h-[300px]">
+                                    <iframe
+                                        className="w-full h-full rounded-[var(--radius-2xl)]"
+                                        src={selectedArea.iframeUrl}
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                    />
+                                </div>
+                            </Grid>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQ + ESTIMATE FORM */}
+                <section className="space-y-6">
+                    <SectionTitle
+                        eyebrow="FAQ"
+                        title="Quick answers"
+                        desc="If you don’t see your situation here, request an estimate and we’ll confirm scope and coverage."
+                    />
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                        {HOME_FAQS.map((f) => (
+                            <div
+                                key={f.q}
+                                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+                            >
+                                <div className="text-white font-semibold">
+                                    {f.q}
+                                </div>
+                                <p className="mt-2 text-sm text-white/70 leading-relaxed">
+                                    {f.a}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <EstimateForm ref={estimateRef} />
+                </section>
+            </main >
             <StickyMobileCall />
         </>
     );
