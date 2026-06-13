@@ -2,6 +2,14 @@ export const BUSINESS_NAME = "LA Precision Asphalt";
 export const PHONE_DISPLAY = "253-709-5434";
 export const PHONE_E164 = "+12537095434";
 
+export const SITE_URL = "https://centrallaasphalt.com";
+
+export const BUSINESS_TAGLINE =
+    "Commercial & industrial asphalt repair across West and Central Los Angeles";
+
+export const BUSINESS_DESCRIPTION =
+    "LA Precision Asphalt provides pothole repair, crack filling, sealcoating, and full asphalt replacement for commercial and industrial properties across Vernon and West to Central Los Angeles. Request a fast estimate and we'll dispatch a vetted local asphalt partner for pricing and scheduling around your operations.";
+
 export const AREA_SERVED = [
     "Vernon, CA",
     "Los Angeles, CA",

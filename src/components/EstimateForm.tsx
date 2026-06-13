@@ -75,9 +75,11 @@ export const EstimateForm = forwardRef<HTMLDivElement>((props, ref) => {
 
             setStatus("success");
             setState(DEFAULT);
-        } catch (err: any) {
+        } catch (err) {
             setStatus("error");
-            setError(err?.message ?? "Something went wrong");
+            setError(
+                err instanceof Error ? err.message : "Something went wrong",
+            );
         }
     }
 
@@ -163,7 +165,10 @@ export const EstimateForm = forwardRef<HTMLDivElement>((props, ref) => {
                         className="rounded-xl border p-3"
                         value={state.service}
                         onChange={(e) =>
-                            update("service", e.target.value as any)
+                            update(
+                                "service",
+                                e.target.value as FormState["service"],
+                            )
                         }
                     >
                         <option>Not sure</option>
@@ -177,7 +182,10 @@ export const EstimateForm = forwardRef<HTMLDivElement>((props, ref) => {
                         className="rounded-xl border p-3"
                         value={state.urgency}
                         onChange={(e) =>
-                            update("urgency", e.target.value as any)
+                            update(
+                                "urgency",
+                                e.target.value as FormState["urgency"],
+                            )
                         }
                     >
                         <option>ASAP</option>

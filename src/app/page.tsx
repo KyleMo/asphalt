@@ -4,17 +4,11 @@ import Link from "next/link";
 import { StickyMobileCall } from "@/components/Layout/StickyMobileCall";
 import { EstimateForm } from "@/components/EstimateForm";
 
-import {
-    PHONE_DISPLAY,
-    PHONE_E164,
-    AREA_SERVED,
-    BUSINESS_NAME,
-} from "@/lib/constants";
+import { PHONE_DISPLAY, PHONE_E164, BUSINESS_NAME } from "@/lib/constants";
 import { SchemaLocalBusiness } from "@/components/schemas/HomepageSchema";
 import { SchemaFAQ } from "@/components/schemas/SchemaFaq";
 import { useRef, useState } from "react";
 import { Pill } from "@/components/Containers/Pill";
-import { Grid } from "@/components/Containers/Grid";
 
 const HOME_FAQS = [
     {
@@ -39,23 +33,50 @@ const HOME_FAQS = [
     },
 ];
 
-const serviceAreas: { id: string, name: string, iframeUrl: string }[] = [
+const serviceAreas: { id: string; name: string; iframeUrl: string }[] = [
     {
         id: "vernon",
         name: "Vernon",
-        iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.32403183519875!3d33.99676534214896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c8d3cfe0eeaf%3A0x2165b53b36077693!2sVernon%2C%20CA!5e0!3m2!1sen!2sus!4v1780867952888!5m2!1sen!2sus"
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.32403183519875!3d33.99676534214896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c8d3cfe0eeaf%3A0x2165b53b36077693!2sVernon%2C%20CA!5e0!3m2!1sen!2sus!4v1780867952888!5m2!1sen!2sus",
     },
     {
         id: "santamonica",
         name: "Santa Monica",
-        iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.52391349868401!3d34.00872023308046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2a4cec2910019%3A0xb4170ab5ff23f5ab!2sSanta%20Monica%2C%20CA!5e0!3m2!1sen!2sus!4v1780868738869!5m2!1sen!2sus"
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.52391349868401!3d34.00872023308046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2a4cec2910019%3A0xb4170ab5ff23f5ab!2sSanta%20Monica%2C%20CA!5e0!3m2!1sen!2sus!4v1780868738869!5m2!1sen!2sus",
     },
-    { id: "culvercity", name: "Culver City", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.42962409868841!3d34.0059917331465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2ba1edb77739d%3A0x3185e9d14beb59fe!2sCulver%20City%2C%20CA!5e0!3m2!1sen!2sus!4v1780869143669!5m2!1sen!2sus" },
-    { id: "midcity", name: "Mid City", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.36912041596322!3d34.04111732057725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b8f9c97be62b%3A0xde136f8ec360d2a!2sMid-City%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869176119!5m2!1sen!2sus" },
-    { id: "hollywood", name: "Hollywood", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.34566791594204!3d34.09444387025635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2bf07045279bf%3A0xf67a9a6797bdfae4!2sHollywood%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869221670!5m2!1sen!2sus" },
-    { id: "torrance", name: "Torrance", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.44167717834812!3d33.879933892327564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dd4ad158b3ded3%3A0xad4bd36e4e0a661e!2sTorrance%2C%20CA!5e0!3m2!1sen!2sus!4v1780869289983!5m2!1sen!2sus" },
-    { id: "westlake", name: "Westlake", iframeUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.44167717834812!3d33.879933892327564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c7a692287f8b%3A0x21ffbf91ef53e292!2sWestlake%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869322159!5m2!1sen!2sus" }
-]
+    {
+        id: "culvercity",
+        name: "Culver City",
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.42962409868841!3d34.0059917331465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2ba1edb77739d%3A0x3185e9d14beb59fe!2sCulver%20City%2C%20CA!5e0!3m2!1sen!2sus!4v1780869143669!5m2!1sen!2sus",
+    },
+    {
+        id: "midcity",
+        name: "Mid City",
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.36912041596322!3d34.04111732057725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b8f9c97be62b%3A0xde136f8ec360d2a!2sMid-City%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869176119!5m2!1sen!2sus",
+    },
+    {
+        id: "hollywood",
+        name: "Hollywood",
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.34566791594204!3d34.09444387025635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2bf07045279bf%3A0xf67a9a6797bdfae4!2sHollywood%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869221670!5m2!1sen!2sus",
+    },
+    {
+        id: "torrance",
+        name: "Torrance",
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.44167717834812!3d33.879933892327564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dd4ad158b3ded3%3A0xad4bd36e4e0a661e!2sTorrance%2C%20CA!5e0!3m2!1sen!2sus!4v1780869289983!5m2!1sen!2sus",
+    },
+    {
+        id: "westlake",
+        name: "Westlake",
+        iframeUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31469.609682527942!2d-118.44167717834812!3d33.879933892327564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c7a692287f8b%3A0x21ffbf91ef53e292!2sWestlake%2C%20Los%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1780869322159!5m2!1sen!2sus",
+    },
+];
 
 function SectionTitle({
     eyebrow,
@@ -90,10 +111,12 @@ function SectionTitle({
 
 export default function HomePage() {
     const estimateRef = useRef<HTMLDivElement>(null);
-    const [selectedAreaId, setSelectedAreaId] = useState<string>(serviceAreas[0].id)
-    const selectedArea = serviceAreas.find(a => a.id === selectedAreaId)!
+    const [selectedAreaId, setSelectedAreaId] = useState<string>(
+        serviceAreas[0].id,
+    );
+    const selectedArea = serviceAreas.find((a) => a.id === selectedAreaId)!;
 
-    const handleAreaClick = (areaId: string) => setSelectedAreaId(areaId)
+    const handleAreaClick = (areaId: string) => setSelectedAreaId(areaId);
 
     const triggerScrollIntoView = () => {
         if (estimateRef.current)
@@ -183,38 +206,54 @@ export default function HomePage() {
                                 {
                                     title: "Pothole Repair",
                                     desc: "Fast patching for active damage in high-traffic areas.",
+                                    image: "/asphalt-paving-service.webp",
                                 },
                                 {
                                     title: "Crack Filling",
                                     desc: "Prevent water intrusion and structural failure.",
+                                    image: "/crackfill.jpg",
                                 },
                                 {
                                     title: "Asphalt Replacement",
                                     desc: "Remove and replace failed sections of pavement.",
+                                    image: "/asphalt-prep.webp",
                                 },
                                 {
                                     title: "Concrete Installation",
                                     desc: "Our team has several years of experience installing concrete driveways, stairs, and more.",
+                                    image: "/concrete-driveway.webp",
                                 },
                                 {
                                     title: "Curbing",
                                     desc: "Guide, stop, and redirect traffic with painted curbs.",
+                                    image: "/asphalt-background.webp",
                                 },
                                 {
                                     title: "Striping and Stenciling",
                                     desc: "Revitalize your parking lot with fresh paint.",
+                                    image: "/sealcoating.webp",
                                 },
                             ].map((service) => (
                                 <div
                                     key={service.title}
-                                    className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--background)] p-5 transition hover:border-[var(--accent)]"
+                                    className="overflow-hidden rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--background)] transition hover:border-[var(--accent)]"
                                 >
-                                    <div className="text-base font-semibold text-[var(--text)]">
-                                        {service.title}
+                                    <div className="relative h-40 w-full">
+                                        <Image
+                                            src={service.image}
+                                            alt={service.title}
+                                            fill
+                                            className="object-cover"
+                                        />
                                     </div>
-                                    <p className="mt-2 text-sm text-[var(--text-muted)]">
-                                        {service.desc}
-                                    </p>
+                                    <div className="p-5">
+                                        <div className="text-base font-semibold text-[var(--text)]">
+                                            {service.title}
+                                        </div>
+                                        <p className="mt-2 text-sm text-[var(--text-muted)]">
+                                            {service.desc}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -400,7 +439,6 @@ export default function HomePage() {
 
                 {/* SERVICE AREA */}
                 <section className="border-b border-[var(--border)] bg-[var(--muted-surface)]">
-
                     <div className="mx-auto max-w-6xl px-6 py-5 lg:py-10">
                         <SectionTitle
                             eyebrow="Service Area"
@@ -408,20 +446,32 @@ export default function HomePage() {
                             desc="We focus on commercial/private properties in and around West to Central Los Angeles:"
                         />
 
-                        <div
-                            className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--surface)] p-10"
-                        >
-                            <Grid columns={2}>
-                                <div className="flex flex-col gap-5">
+                        <div className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--surface)] p-10">
+                            <div className="flex flex-col gap-8 md:flex-row">
+                                <div className="flex flex-1 flex-col gap-5">
                                     <h3 className="text-xl font-bold tracking-tight text-[var(--text)]">
                                         Where We Work
                                     </h3>
                                     <p className="text-sm leading-relaxed text-[var(--text-muted)] p-0">
-                                        Industrial corridors, truck yards, dock approaches, and private lots — coordinated around your shift schedule.
+                                        Industrial corridors, truck yards, dock
+                                        approaches, and private lots —
+                                        coordinated around your shift schedule.
                                     </p>
                                     <div className="flex flex-wrap gap-1">
-                                        {serviceAreas.map(area => {
-                                            return <Pill key={area.id} text={area.name} active={area.id === selectedAreaId} onClick={() => handleAreaClick(area.id)} />
+                                        {serviceAreas.map((area) => {
+                                            return (
+                                                <Pill
+                                                    key={area.id}
+                                                    text={area.name}
+                                                    active={
+                                                        area.id ===
+                                                        selectedAreaId
+                                                    }
+                                                    onClick={() =>
+                                                        handleAreaClick(area.id)
+                                                    }
+                                                />
+                                            );
                                         })}
                                     </div>
                                     <div className="flex shrink-0 items-center gap-2">
@@ -440,15 +490,15 @@ export default function HomePage() {
                                         </Link>
                                     </div>
                                 </div>
-                                <div className="h-full min-h-[300px]">
+                                <div className="flex flex-1 flex-col min-h-[300px]">
                                     <iframe
-                                        className="w-full h-full rounded-[var(--radius-2xl)]"
+                                        className="flex-1 w-full rounded-[var(--radius-2xl)]"
                                         src={selectedArea.iframeUrl}
                                         loading="lazy"
                                         referrerPolicy="no-referrer-when-downgrade"
                                     />
                                 </div>
-                            </Grid>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -479,7 +529,7 @@ export default function HomePage() {
 
                     <EstimateForm ref={estimateRef} />
                 </section>
-            </main >
+            </main>
             <StickyMobileCall />
         </>
     );
